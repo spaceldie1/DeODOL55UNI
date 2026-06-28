@@ -388,10 +388,10 @@ public class LOD : P3D_LOD, IComparable<LOD>
 		}
 	}
 
-	private bool TrySkipMissingVertexIndexArrays(BinaryReaderEx input)
+	private bool TrySkipMissingVertexIndexArrays(BinaryReaderEx input, int maxSkip = 64)
 	{
 		long position = input.Position;
-		for (int i = 0; i <= 64 && position + i < input.BaseStream.Length; i++)
+		for (int i = 0; i <= maxSkip && position + i < input.BaseStream.Length; i++)
 		{
 			if (LooksLikePolygonStart(input, position + i))
 			{
@@ -452,6 +452,11 @@ public class LOD : P3D_LOD, IComparable<LOD>
 		Materials = ReadMaterialsWithRecovery(input);
 		Logging_Functions.Echo(input, Materials.Length, "materials");
 		if (vertexCount == 0 && TrySkipMissingVertexIndexArrays(input))
+		{
+			Logging_Functions.Echo(input, pointToVertex.Length, "pointToVertex");
+			Logging_Functions.Echo(input, vertexToPoint.Length, "vertexToPoint");
+		}
+		else if (TrySkipMissingVertexIndexArrays(input, 16))
 		{
 			Logging_Functions.Echo(input, pointToVertex.Length, "pointToVertex");
 			Logging_Functions.Echo(input, vertexToPoint.Length, "vertexToPoint");
