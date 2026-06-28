@@ -11,6 +11,8 @@ namespace ODOL6.Model.ODOL;
 
 public class ODOL : P3D
 {
+	private static readonly bool TraceEnabled = Environment.GetEnvironmentVariable("DEODOL_TRACE") == "1";
+
 	public string fileName;
 
 	public const int LATEST_VERSION = 73;
@@ -68,6 +70,14 @@ public class ODOL : P3D
 
 	private void Read(BinaryReaderEx input)
 	{
+		void Trace(string message)
+		{
+			if (TraceEnabled)
+			{
+				Console.WriteLine("[trace] " + message + " @ " + input.Position);
+			}
+		}
+
 		string text = input.ReadAscii(4);
 		if ("ODOL" != text)
 		{
@@ -84,6 +94,7 @@ public class ODOL : P3D
 			throw new FormatException("Old ODOL version is currently not supported");
 		}
 		input.Version = (int)base.Version;
+		Trace("header-read");
 		if (base.Version >= 44)
 		{
 			input.UseLZOCompression = true;
@@ -105,6 +116,7 @@ public class ODOL : P3D
 			Logging_Functions.Echo(input, muzzleFlash, "muzzleFlash");
 		}
 		nLods = input.ReadInt32();
+		Trace("lod-count-read");
 		Logging_Functions.Echo(input, nLods, "nLods");
 		resolutions = new float[nLods];
 		for (int i = 0; i < nLods; i++)
@@ -112,13 +124,17 @@ public class ODOL : P3D
 			resolutions[i] = input.ReadSingle();
 			Logging_Functions.Echo("Found resolution with index " + i + " and data " + resolutions[i]);
 		}
+		Trace("lod-resolutions-read");
 		modelInfo = new ODOL_ModelInfo(input, nLods);
+		Trace("model-info-read");
 		if (base.Version > 29)
 		{
 			hasAnims = input.ReadBoolean();
+			Trace("has-anims-read");
 			if (hasAnims)
 			{
 				animations.Read(input);
+				Trace("animations-read");
 				Logging_Functions.Echo("Animations present and read.");
 			}
 		}
@@ -130,16 +146,19 @@ public class ODOL : P3D
 			lodStartAdresses[j] = input.ReadUInt32();
 			Logging_Functions.Echo("LOD start address of LOD " + j + " found at: " + lodStartAdresses[j] + ", Hex: " + lodStartAdresses[j].ToString("X4"));
 		}
+		Trace("lod-starts-read");
 		for (int k = 0; k < nLods; k++)
 		{
 			lodEndAdresses[k] = input.ReadUInt32();
 			Logging_Functions.Echo("LOD end address of LOD " + k + " found at: " + lodEndAdresses[k] + ", Hex: " + lodEndAdresses[k].ToString("X4"));
 		}
+		Trace("lod-ends-read");
 		for (int l = 0; l < nLods; l++)
 		{
 			permanent[l] = input.ReadBoolean();
 			Logging_Functions.Echo("LOD " + l + " is permanent: " + permanent[l]);
 		}
+		Trace("lod-permanent-flags-read");
 		LoadableLodInfos = new List<LoadableLodInfo>(nLods);
 		lods = new LOD[nLods];
 		long position = input.Position;
@@ -154,8 +173,10 @@ public class ODOL : P3D
 			}
 			input.Position = lodStartAdresses[m];
 			lods[m] = new LOD();
+			Trace("lod-" + m + "-read-start");
 			Logging_Functions.Echo("Processing LOD: " + m);
 			lods[m].Read(input, resolutions[m]);
+			Trace("lod-" + m + "-read-end");
 			input.Position = position;
 		}
 		if (base.Version > 54)

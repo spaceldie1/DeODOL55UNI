@@ -93,13 +93,23 @@ public class BinaryReaderEx : BinaryReader
 		catch
 		{
 			Console.WriteLine("Error!");
-			return null;
+			return Array.Empty<T>();
 		}
 	}
 
 	public T[] ReadArray<T>(Func<BinaryReaderEx, T> readElement)
 	{
-		return ReadArrayBase(readElement, ReadInt32());
+		int num = ReadInt32();
+		if (num < 0)
+		{
+			return Array.Empty<T>();
+		}
+		long num2 = BaseStream.Length - BaseStream.Position;
+		if ((long)num > num2)
+		{
+			return Array.Empty<T>();
+		}
+		return ReadArrayBase(readElement, num);
 	}
 
 	public T[] ReadArray<T>() where T : IDeserializable, new()
@@ -125,6 +135,10 @@ public class BinaryReaderEx : BinaryReader
 	public T[] ReadCompressedArray<T>(Func<BinaryReaderEx, T> readElement, int elemSize)
 	{
 		int num = ReadInt32();
+		if (num < 0 || num > 10000000)
+		{
+			return Array.Empty<T>();
+		}
 		uint expectedSize = (uint)(num * elemSize);
 		return new BinaryReaderEx(new MemoryStream(ReadCompressed(expectedSize))).ReadArrayBase(readElement, num);
 	}
@@ -157,6 +171,10 @@ public class BinaryReaderEx : BinaryReader
 	public T[] ReadCondensedArray<T>(Func<BinaryReaderEx, T> readElement, int sizeOfT)
 	{
 		int num = ReadInt32();
+		if (num < 0 || num > 10000000)
+		{
+			return Array.Empty<T>();
+		}
 		T[] array = new T[num];
 		if (ReadBoolean())
 		{

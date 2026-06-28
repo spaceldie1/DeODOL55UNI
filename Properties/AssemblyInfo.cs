@@ -2,8 +2,8 @@ using System.Diagnostics;
 using System.Reflection;
 [assembly: AssemblyCompany("DeODOL55UNI")]
 [assembly: AssemblyConfiguration("Release")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyInformationalVersion("55.0.0-uni")]
+[assembly: AssemblyFileVersion("55.0.2.0")]
+[assembly: AssemblyInformationalVersion("55.0.2-uni")]
 [assembly: AssemblyProduct("DeODOL55UNI")]
 [assembly: AssemblyTitle("DeODOL55UNI")]
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("55.0.2.0")]

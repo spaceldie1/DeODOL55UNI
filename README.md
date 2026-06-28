@@ -9,15 +9,27 @@ This build was created to address a real failure case where `DeODOL54` crashed o
 The patched build fixes several parser issues found in ODOL v54 models:
 
 - embedded `RVMat` alignment recovery after malformed or shifted material tails
+- polygon header realignment before `Polygons`
 - recovery when `pointToVertex` / `vertexToPoint` arrays are absent and polygon data starts immediately
+- explicit handling for empty compressed index-array blocks
 - safe handling of empty LODs
 - safe handling of `nUVSets == 0`
+- plausibility guards for array counters and UV-set counts to avoid runaway reads on malformed layouts
+- non-fatal `model.cfg` extraction when source animation/config data is incomplete
 - quieter default logging for practical CLI usage
 
-Validated on a previously failing model:
+Validated on previously failing models:
 
-- `minidress_f.p3d` now converts successfully to MLOD
-- `model.cfg` extraction also succeeds
+- `minidress_f.p3d`
+- `tenement_medium.p3d`
+- `tisy_garages2_sakhal_grass_l.p3d`
+- `transitbus.p3d`
+
+Smoke test result on a DayZ sample set:
+
+- `40 / 40` ODOL `.p3d` files converted successfully
+- sample selection: largest files under `15 MB` from a large local `P:\\dz` model tree
+- outputs verified as generated in isolated temp workspaces
 
 ## Build
 
@@ -73,5 +85,4 @@ If a verifiable upstream source repository and license are identified later, the
 Current packaged build:
 
 - `DeODOL55UNI`
-- version label: `55.0.0-uni`
-
+- version label: `55.0.2-uni`

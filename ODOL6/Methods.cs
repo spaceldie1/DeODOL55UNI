@@ -65,8 +65,15 @@ public static class Methods
 				if (fileInfo.Directory != null)
 				{
 					FileInfo fileInfo2 = new FileInfo(Path.Combine(fileInfo.Directory.FullName, "model.cfg"));
-					string contents = ((!fileInfo2.Exists) ? oDOL.GetModelCfg() : oDOL.CombineModelCfg(File.ReadAllLines(fileInfo2.FullName)));
-					File.WriteAllText(fileInfo2.FullName, contents);
+					try
+					{
+						string contents = ((!fileInfo2.Exists) ? oDOL.GetModelCfg() : oDOL.CombineModelCfg(File.ReadAllLines(fileInfo2.FullName)));
+						File.WriteAllText(fileInfo2.FullName, contents);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine("'" + fileNameWithoutExtension + $"': model.cfg extraction skipped ({ex.GetType().Name}).");
+					}
 				}
 			}
 			if (!extractmaterial)
