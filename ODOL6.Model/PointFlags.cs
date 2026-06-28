@@ -1,0 +1,30 @@
+using System;
+
+namespace ODOL6.Model;
+
+[Flags]
+public enum PointFlags : uint
+{
+	NONE = 0u,
+	ONLAND = 1u,
+	UNDERLAND = 2u,
+	ABOVELAND = 4u,
+	KEEPLAND = 8u,
+	LAND_MASK = 0xFu,
+	DECAL = 0x100u,
+	VDECAL = 0x200u,
+	DECAL_MASK = 0x300u,
+	NOLIGHT = 0x10u,
+	AMBIENT = 0x20u,
+	FULLLIGHT = 0x40u,
+	HALFLIGHT = 0x80u,
+	LIGHT_MASK = 0xF0u,
+	NOFOG = 0x1000u,
+	SKYFOG = 0x2000u,
+	FOG_MASK = 0x3000u,
+	USER_MASK = 0xFF0000u,
+	USER_STEP = 0x10000u,
+	SPECIAL_MASK = 0xF000000u,
+	SPECIAL_HIDDEN = 0x1000000u,
+	ALL_FLAGS = 0xFFF33FFu
+}

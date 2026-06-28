@@ -1,0 +1,10 @@
+bin/
+obj/
+publish/
+*.user
+*.suo
+*.pdb
+*.log
+*.tmp
+*.bak
+

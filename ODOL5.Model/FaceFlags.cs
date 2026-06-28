@@ -1,0 +1,18 @@
+using System;
+
+namespace ODOL5.Model;
+
+[Flags]
+public enum FaceFlags
+{
+	DEFAULT = 0,
+	SHADOW_OFF = 0x10,
+	MERGING_OFF = 0x1000000,
+	ZBIAS_LOW = 0x100,
+	ZBIAS_MID = 0x200,
+	ZBIAS_HIGH = 0x300,
+	LIGHTNING_BOTH = 0x20,
+	LIGHTNING_POSITION = 0x80,
+	LIGHTNING_FLAT = 0x200000,
+	LIGHTNING_REVERSED = 0x100000
+}
